@@ -1,0 +1,4 @@
+age,capital-gain,capital-loss,hours-per-week,workclass,education,marital-status,occupation,relationship,race,sex,native-country,label
+0.3835616409778595,0.0,0.0,0.44897958636283875,0,2,0,2,0,0,0,0,1.0
+0.31506848335266113,0.0,0.0,0.030612245202064514,3,0,1,7,1,0,1,0,0.0
+0.04109589010477066,0.0,0.0,0.3979591727256775,0,1,1,2,1,0,1,0,0.0
