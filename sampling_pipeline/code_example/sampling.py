@@ -53,19 +53,29 @@ def read_from_gcs(pipeline, tfrecord_tfxio):
 def read_sample_from_gcs(pipeline, tfrecord_tfxio, sample_size):
     """
     Read a sample of tfrecord-records stored at the input_path-location
-    :param sample_size: size of the random sample
+    :param sample_size: size of the random sample; if <1 then the value is treated as a percentage
     :param pipeline: beam-pipeline object
     :param tfrecord_tfxio: mapper for TFRecord into provided schema
     :return: PCollection, ready for further processing
     """
-
-    raw_data = (
-            pipeline
-            | 'Read Sample - Read Data from Cloud-Storage' >> tfrecord_tfxio.BeamSource(batch_size=1)
-            | 'Sample N elements' >> beam.combiners.Sample.FixedSizeGlobally(sample_size)
-            | 'Split sample-collection into single records ' >> beam.FlatMap(lambda x: x)
-            | 'Extract Dict from pa.RecordBatch ' >> beam.Map(lambda x: x.to_pydict())
-    )
+    if sample_size < 1:
+        _, sampled_data = (
+                pipeline
+                | 'Read Sample - Read Data from Cloud-Storage' >> tfrecord_tfxio.BeamSource(batch_size=1)
+                | 'Sampling' >> beam.Partition(
+                    lambda elem, _: int(random.uniform(0, 1) < sample_size), 2)
+        raw_data = (
+                sampled_data
+                | 'Extract Dict from pa.RecordBatch ' >> beam.Map(lambda x: x.to_pydict())
+        )
+    else:
+        raw_data = (
+                pipeline
+                | 'Read Sample - Read Data from Cloud-Storage' >> tfrecord_tfxio.BeamSource(batch_size=1)
+                | 'Sample N elements' >> beam.combiners.Sample.FixedSizeGlobally(sample_size)
+                | 'Split sample-collection into single records ' >> beam.FlatMap(lambda x: x)
+                | 'Extract Dict from pa.RecordBatch ' >> beam.Map(lambda x: x.to_pydict())
+        )
     return raw_data
 
 
