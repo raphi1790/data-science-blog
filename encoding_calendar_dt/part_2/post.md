@@ -8,12 +8,12 @@ Long-term seasonality is quite common in real data. To give just a few examples:
 
 But how can you teach a DNN seasonal effects so that its predictions show them as well? 
 
-# Common Approaches
+# Conventional Approaches
 There are basically two types of methods for dealing with long-term seasonality in time series: Decomposition and Coding. Coding methods create features based on the input date, while decomposition methods focus on filtering out the seasonal portion of the signal. Although decomposition methods can be very powerful, we will focus on coding methods in this blog post.
 
 One such encoding technique, which is very widely used, splits the *calendar_dt* into several date components such as year, month, and day_of_year. A DNN can then learn seasonal effects based on these features by combining them with the corresponding labels.
 
-![alt text](assets/sample_common_approach.png "Encoding *calendar_dt* using a common approach.")
+![alt text](assets/sample_common_approach.png "Encoding *calendar_dt* using a conventional approach.")
 
 The advantage of this approach is that it does not require any expertise, since the DNN tries to extract the information directly from the signal. But like everything in life, this advantage comes at a price. In this case, it is the amount of data needed for training, especially if the seasonality is annual or longer periodic. This becomes clear if you imagine a time series with similar values in January and December. To learn such a pattern, the DNN must combine completely different coded input data.
 
@@ -57,7 +57,7 @@ One trick to speed up the coding process is to compute all possible calendar_dts
 ---
 # Conclusion
 In this blog post, we learned about different encoding methods for *calendar_dt* that help DNN deal with long-term seasonality. 
-Common approaches focus on splitting the date into its parts like year and month. Unfortunately, this approach requires a large amount of data for training, which is not always given.
+Conventional approaches focus on splitting the date into its parts like year and month. Unfortunately, this approach requires a large amount of data for training, which is not always given.
 Therefore, at Adtrac we have developed a different method that requires less data, but requires some expertise. The main idea is to code data across multiple dimensions in such a way that similar inputs produce similar features.  However, what is similar requires some prior knowledge; for example, all days in spring may be similar.
 Ultimately, this coding allows a DNN to learn long-term seasonality very efficiently.
 
