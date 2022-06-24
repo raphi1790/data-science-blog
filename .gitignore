@@ -6,3 +6,7 @@ sampling_pipeline/.idea/inspectionProfiles/
 sampling_pipeline/.idea/
 
 .vscode/
+
+sampling_pipeline/code_example/sampled_data/
+
+*.csv
